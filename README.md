@@ -1,6 +1,6 @@
 # snap_talk
 
-A new Flutter project.
+Snap Talk is a lightning-fast chatting app built with Flutter and Node.js socket-io. Enjoy real-time communication, a sleek interface, and secure messaging
 
 ## Getting Started
 

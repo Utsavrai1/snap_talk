@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snap_talk/models/message_model.dart';
-import 'package:snap_talk/screens/chat_screen.dart';
+import 'package:snap_talk/chat/chat_screen.dart';
 
 class RecentChats extends StatelessWidget {
   const RecentChats({super.key});
@@ -23,6 +23,7 @@ class RecentChats extends StatelessWidget {
           ),
           child: ListView.builder(
             itemCount: chats.length,
+            physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               final Message chat = chats[index];
               return GestureDetector(
