@@ -10,8 +10,42 @@ jobs:
     name: Build and Release IPA
     runs-on: macos-latest
     steps:
-      - name: Print current directory
-        run: pwd
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "17.x"
 
-      - name: List files in current directory
-        run: ls -la
+      - name: Install flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.3.0"
+
+      - name: check xcode and clang version
+        run: |
+          xcodebuild -version
+          clang --version
+
+      - name: flutter pub get
+        run: |
+          cd /Users/runner/work/snap_talk/snap_talk
+          pwd
+          ls 
+          flutter pub get
+
+      - name: Fastlane Match setup
+        run: |
+          cd ios
+          fastlane dev
+
+      - name: flutter build iOS
+        run: flutter build ios --release --flavor dev -t lib/main_dev.dart
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: iOS-release
+          path: build/ios/iphoneos/Runner.app
