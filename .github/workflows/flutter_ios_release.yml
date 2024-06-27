@@ -22,7 +22,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.0.0"
+          xcode-version: "15.3.0"
 
       - name: check xcode and clang version
         run: |
