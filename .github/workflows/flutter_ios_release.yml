@@ -38,11 +38,13 @@ jobs:
 
       - name: Fastlane Match setup
         run: |
-          cd ios
+          cd /Users/runner/work/snap_talk/snap_talk/ios
           fastlane dev
 
       - name: flutter build iOS
-        run: flutter build ios --release --flavor dev -t lib/main_dev.dart
+        run: |
+          cd /Users/runner/work/snap_talk/snap_talk
+          flutter build ios --release --flavor dev -t lib/main_dev.dart
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
