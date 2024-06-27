@@ -35,11 +35,6 @@ jobs:
           xcodebuild -version
           clang --version
 
-      - name: Fastlane Match setup
-        run: |
-          cd ios
-          fastlane dev
-
       - name: flutter build iOS
         run: flutter build ios --release --flavor dev -t lib/main_dev.dart
 
