@@ -10,13 +10,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         try {
           final response =
-              await AuthService().login(event.email, event.password);
-          if (response['status_code'] == 200) {
+              await AuthService().login(event.username, event.password);
+          if (response['status_code'] == 201) {
             await LocalStorageService()
                 .setDataToStorage('db_token', response['token']);
 
-            await LocalStorageService()
-                .setDataToStorage('id', response['userid']);
+            await LocalStorageService().setDataToStorage('id', response['_id']);
 
             emit(LoginSuccessState());
           } else {
@@ -29,14 +28,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(SignUpState());
 
         try {
-          final response = await AuthService()
-              .signUp(event.name, event.email, event.password);
-          if (response['status_code'] == 200) {
+          final response = await AuthService().signUp(
+            event.name,
+            event.username,
+            event.password,
+            event.confirmPassword,
+            event.gender,
+          );
+          if (response['status_code'] == 201) {
             await LocalStorageService()
                 .setDataToStorage('db_token', response['token']);
 
-            await LocalStorageService()
-                .setDataToStorage('id', response['userid']);
+            await LocalStorageService().setDataToStorage('id', response['_id']);
 
             emit(SignUpSuccessState());
           } else {
@@ -44,33 +47,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           }
         } catch (e) {
           emit(SignUpFailState('$e'));
-        }
-      } else if (event is SendingEmailEvent) {
-        emit(SendMailState());
-        final response = await AuthService().sendVerificationEmail(event.email);
-
-        try {
-          if (response['status_code'] == 200) {
-            emit(SendMailSuccessState());
-          } else {
-            emit(SendMailFailState(response['error']));
-          }
-        } catch (e) {
-          emit(SendMailFailState('$e'));
-        }
-      } else if (event is VerifyingEmailEvent) {
-        emit(VerifyMailState());
-        final response =
-            await AuthService().verifyEmail(event.email, event.otp);
-
-        try {
-          if (response['status_code'] == 200) {
-            emit(VerifyMailSuccessState());
-          } else {
-            emit(VerifyMailFailState(response['error']));
-          }
-        } catch (e) {
-          emit(VerifyMailFailState('$e'));
         }
       }
     });
@@ -82,10 +58,10 @@ abstract class AuthEvent {}
 abstract class AuthState {}
 
 class AttemptingLoginEvent extends AuthEvent {
-  String email;
+  String username;
   String password;
 
-  AttemptingLoginEvent({required this.email, required this.password});
+  AttemptingLoginEvent({required this.username, required this.password});
 }
 
 class InitialState extends AuthState {}
@@ -102,13 +78,17 @@ class LoginFailState extends AuthState {
 
 class AttemptingSignUpEvent extends AuthEvent {
   String name;
-  String email;
+  String username;
   String password;
+  String confirmPassword;
+  String gender;
 
   AttemptingSignUpEvent({
     required this.name,
-    required this.email,
+    required this.username,
     required this.password,
+    required this.confirmPassword,
+    required this.gender,
   });
 }
 
@@ -119,42 +99,4 @@ class SignUpSuccessState extends AuthState {}
 class SignUpFailState extends AuthState {
   String error;
   SignUpFailState(this.error);
-}
-
-class SendingEmailEvent extends AuthEvent {
-  String email;
-
-  SendingEmailEvent({
-    required this.email,
-  });
-}
-
-class SendMailState extends AuthState {}
-
-class SendMailSuccessState extends AuthState {}
-
-class SendMailFailState extends AuthState {
-  String error;
-
-  SendMailFailState(this.error);
-}
-
-class VerifyingEmailEvent extends AuthEvent {
-  String email;
-  String otp;
-
-  VerifyingEmailEvent({
-    required this.email,
-    required this.otp,
-  });
-}
-
-class VerifyMailState extends AuthState {}
-
-class VerifyMailSuccessState extends AuthState {}
-
-class VerifyMailFailState extends AuthState {
-  String error;
-
-  VerifyMailFailState(this.error);
 }

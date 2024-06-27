@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:snap_talk/models/user_model.dart';
-import 'package:snap_talk/chat/chat_screen.dart';
-import 'package:snap_talk/home/home_screen.dart';
+import 'package:snap_talk/chat/chat.dart';
+import 'package:snap_talk/home/home.dart';
 import 'package:snap_talk/authentication/login_screen.dart';
 import 'package:snap_talk/authentication/signup_screen.dart';
 
@@ -16,13 +15,13 @@ final routerConfiguration = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       name: 'Login',
       path: '/login',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => LoginScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
       name: 'SignUp',
       path: '/signup',
-      builder: (context, state) => const SignUpScreen(),
+      builder: (context, state) => SignUpScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
@@ -35,8 +34,7 @@ final routerConfiguration = GoRouter(
       name: 'Chat',
       path: '/chat',
       builder: (context, state) {
-        final User user = state.extra as User;
-        return ChatScreen(user: user);
+        return const ChatScreen();
       },
     ),
   ],
