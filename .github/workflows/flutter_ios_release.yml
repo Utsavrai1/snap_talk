@@ -1,4 +1,4 @@
-name: Flutter iOS Release
+name: Flutter IOS Release
 
 on:
   push:
